@@ -1,0 +1,5 @@
+[default]
+TITLE = "TimeSaver"
+EXTENSIONS = [
+    "app.ext.database:init_app"
+]
