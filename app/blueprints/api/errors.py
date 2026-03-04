@@ -3,6 +3,8 @@ from pydantic import ValidationError
 from sqlalchemy.exc import IntegrityError
 from werkzeug.exceptions import BadRequest
 
+from app.exceptions import DoubleBookingError, EntityNotFoundError
+
 
 def register_error_handlers(app):
     """
@@ -26,6 +28,14 @@ def register_error_handlers(app):
     @app.errorhandler(BadRequest)
     def handle_bad_request(error):
         return jsonify({"message": "Invalid JSON body"}), 400
+
+    @app.errorhandler(DoubleBookingError)
+    def handle_double_booking_error(error):
+        return jsonify({"message": error.message}), 409
+
+    @app.errorhandler(EntityNotFoundError)
+    def handle_entity_not_found_error(error):
+        return jsonify({"message": error.message}), 404
 
     @app.errorhandler(Exception)
     def handle_unexpected_error(error):

@@ -80,11 +80,47 @@ Base URL: `/api/v1`
 }
 ```
 
+### Appointments
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/appointments` | Lista todas as consultas |
+| POST | `/appointments` | Agenda nova consulta |
+| GET | `/appointments/<id>` | Busca consulta pelo ID |
+| PUT | `/appointments/<id>` | Atualiza consulta pelo ID |
+| DELETE | `/appointments/<id>` | Remove consulta pelo ID |
+
+**POST /appointments** - Body:
+```json
+{
+  "doctor_id": 1,
+  "patient_id": 1,
+  "scheduled_at": "2024-01-15T10:00:00",
+  "notes": "Consulta de rotina"
+}
+```
+
+**PUT /appointments/<id>** - Body (todos os campos são opcionais):
+```json
+{
+  "doctor_id": 2,
+  "patient_id": 1,
+  "scheduled_at": "2024-01-15T11:00:00",
+  "status": "completed",
+  "notes": "Atualização de observações"
+}
+```
+
+**Regras de negócio:**
+- Um médico não pode ter duas consultas no mesmo horário
+- Um paciente não pode ter duas consultas no mesmo horário
+- Consultas canceladas não são consideradas para validação de conflito
+
 ### Erros
 
 | Código | Descrição |
 |--------|-----------|
 | 400 | Erro de validação (campos obrigatórios, formato inválido) |
 | 404 | Recurso não encontrado |
-| 409 | Conflito de integridade (ex: CRM duplicado) |
+| 409 | Conflito de integridade (ex: CRM duplicado, double booking) |
 | 500 | Erro interno do servidor |
