@@ -39,3 +39,52 @@ docker compose up --build
 | scheduled_at | DateTime | Data/hora agendada |
 | status | Enum | SCHEDULED, CANCELED, COMPLETED |
 | notes | Text | Observações (opcional) |
+
+## API REST
+
+Base URL: `/api/v1`
+
+### Doctors
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/doctors` | Lista todos os médicos |
+| POST | `/doctors` | Cadastra novo médico |
+| GET | `/doctors/<crm>` | Busca médico pelo CRM |
+| DELETE | `/doctors/<crm>` | Remove médico pelo CRM |
+
+**POST /doctors** - Body:
+```json
+{
+  "name": "Dr. João Silva",
+  "specialty": "Cardiologia",
+  "crm": "12345-SP"
+}
+```
+
+### Patients
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/patients` | Lista todos os pacientes |
+| POST | `/patients` | Cadastra novo paciente |
+| GET | `/patients/<id>` | Busca paciente pelo ID |
+| DELETE | `/patients/<id>` | Remove paciente pelo ID |
+
+**POST /patients** - Body:
+```json
+{
+  "name": "Maria Santos",
+  "email": "maria@email.com",
+  "birth_date": "1990-05-15"
+}
+```
+
+### Erros
+
+| Código | Descrição |
+|--------|-----------|
+| 400 | Erro de validação (campos obrigatórios, formato inválido) |
+| 404 | Recurso não encontrado |
+| 409 | Conflito de integridade (ex: CRM duplicado) |
+| 500 | Erro interno do servidor |

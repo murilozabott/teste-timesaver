@@ -8,8 +8,11 @@ def create_app():
     configuration.init_app(app)
 
     @app.route("/")
-    # check if dynaconf and sql alchemy extension were configured properly
     def test():
+        """
+        Rota básica de "healthcheck"
+        """
+
         from flask import jsonify
         from sqlalchemy import text
 
