@@ -6,3 +6,5 @@ db = SQLAlchemy()
 def init_app(app):
     app.config["SQLALCHEMY_DATABASE_URI"] = app.config["DB_URL"]
     db.init_app(app)
+
+    from app import models  # noqa: F401
