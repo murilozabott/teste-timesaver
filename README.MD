@@ -2,10 +2,20 @@
 
 Estrutura base para sistema de agendamento de consultas médicas desenvolvido com **Flask**.
 
+## Pré-requisitos
+
+Copie o arquivo de exemplo e ajuste as variáveis se necessário:
+
+```bash
+cp .env.example .env
+```
+
+O `.env` padrão já funciona sem alterações para desenvolvimento local.
+
 ## Executando o Projeto **(Ambiente de desenvolvimento)**
 
 ```bash
-docker compose up --build
+docker compose --profile dev up --build
 ```
 
 - Debug habilitado
@@ -14,6 +24,18 @@ docker compose up --build
 - `flask run` simples, ao invés de servidor WSGI como `gunicorn`
 - Disponível em <http://localhost:5000/>
 - Migrations executadas automaticamente antes da aplicação iniciar
+
+## Executando os Testes
+
+Os testes rodam em um banco separado (`healthcare_test`) criado automaticamente pelo script `docker/init-test-db.sh`.
+
+```bash
+docker compose --profile test run --rm test
+```
+
+- Cada teste roda em uma transação revertida ao final — sem poluição entre testes
+- O banco de testes é migrado automaticamente antes de rodar o pytest
+- Saída detalhada com `pytest -vv --tb=long`
 
 ## Modelos
 

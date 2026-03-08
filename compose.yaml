@@ -11,6 +11,8 @@ services:
       db:
         condition: service_healthy
     command: ["flask", "db", "upgrade"]
+    profiles:
+      - dev
 
   web:
     build:
@@ -29,6 +31,42 @@ services:
         condition: service_healthy
       migrate:
         condition: service_completed_successfully
+    profiles:
+      - dev
+
+  test:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    environment:
+      FLASK_APP: app:create_app
+      FLASK_DB_URL: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/healthcare_test
+    volumes:
+      - .:/app
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate-test:
+        condition: service_completed_successfully
+    command: ["python", "-m", "pytest", "-vv", "--tb=long"]
+    profiles:
+      - test
+
+  migrate-test:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    environment:
+      FLASK_APP: app:create_app
+      FLASK_DB_URL: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/healthcare_test
+    volumes:
+      - .:/app
+    depends_on:
+      db:
+        condition: service_healthy
+    command: ["flask", "db", "upgrade"]
+    profiles:
+      - test
 
   db:
     image: postgres:16
@@ -41,6 +79,7 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./docker/init-test-db.sh:/docker-entrypoint-initdb.d/init-test-db.sh
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 5s
