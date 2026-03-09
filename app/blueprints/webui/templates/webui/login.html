@@ -1,0 +1,72 @@
+{% extends "webui/base.html" %}
+{% block title %}Login – TimeSaver{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-5">
+    <ul class="nav nav-tabs mb-3" id="authTab">
+      <li class="nav-item">
+        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#login-tab">Login</button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#register-tab">Cadastro</button>
+      </li>
+    </ul>
+
+    <div id="alert-container"></div>
+
+    <div class="tab-content">
+      <!-- Aba de login -->
+      <div class="tab-pane fade show active" id="login-tab">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Entrar</h5>
+            <form id="login-form">
+              <div class="mb-3">
+                <label class="form-label">Usuário</label>
+                <input type="text" class="form-control" id="login-username" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Senha</label>
+                <input type="password" class="form-control" id="login-password" required>
+              </div>
+              <button type="submit" class="btn btn-primary w-100">Entrar</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Aba de cadastro -->
+      <div class="tab-pane fade" id="register-tab">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Criar Conta</h5>
+            <form id="register-form">
+              <div class="mb-3">
+                <label class="form-label">Usuário</label>
+                <input type="text" class="form-control" id="reg-username" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Senha</label>
+                <input type="password" class="form-control" id="reg-password" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Perfil</label>
+                <select class="form-select" id="reg-role">
+                  <option value="employee">Funcionário</option>
+                  <option value="admin">Administrador</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-success w-100">Cadastrar</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="module" src="{{ url_for('webui.static', filename='js/login.js') }}"></script>
+{% endblock %}

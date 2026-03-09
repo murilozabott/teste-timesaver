@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}TimeSaver{% endblock %}</title>
+  {{ bootstrap.load_css() }}
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="#">TimeSaver</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <!-- Links principais, ocultos até o estado de autenticação ser verificado -->
+        <ul class="navbar-nav me-auto d-none" id="nav-links">
+          <li class="nav-item">
+            <a class="nav-link" href="/appointments">Agendamentos</a>
+          </li>
+          <li class="nav-item" id="nav-doctors-link">
+            <a class="nav-link" href="/doctors">Médicos</a>
+          </li>
+          <li class="nav-item" id="nav-patients-link">
+            <a class="nav-link" href="/patients">Pacientes</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item d-flex align-items-center d-none" id="nav-user">
+            <span class="navbar-text me-3" id="nav-username"></span>
+          </li>
+          <li class="nav-item d-none" id="nav-logout">
+            <a class="nav-link" href="#" onclick="logout()">Sair</a>
+          </li>
+          <li class="nav-item" id="nav-login-link">
+            <a class="nav-link" href="/login">Login</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    {% block content %}{% endblock %}
+  </div>
+
+  <!-- Modal de confirmação reutilizável (usado em exclusões) -->
+  <div class="modal fade" id="confirmModal" tabindex="-1">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirmar</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body" id="confirm-message">Tem certeza?</div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button class="btn btn-danger" id="confirm-ok">Confirmar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{ bootstrap.load_js() }}
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script type="module" src="{{ url_for('webui.static', filename='js/app.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

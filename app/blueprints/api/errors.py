@@ -1,7 +1,7 @@
 from flask import jsonify
 from pydantic import ValidationError
 from sqlalchemy.exc import IntegrityError
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import BadRequest, HTTPException
 
 from app.exceptions import DoubleBookingError, EntityNotFoundError
 from app.services.auth_service import InvalidCredentialsError, TokenError
@@ -48,4 +48,6 @@ def register_error_handlers(app):
 
     @app.errorhandler(Exception)
     def handle_unexpected_error(error):
+        if isinstance(error, HTTPException):
+            return error
         return jsonify({"message": "Internal server error"}), 500

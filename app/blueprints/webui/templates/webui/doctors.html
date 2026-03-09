@@ -1,0 +1,63 @@
+{% extends "webui/base.html" %}
+{% block title %}Médicos – TimeSaver{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>Médicos</h2>
+  <button class="btn btn-primary" id="btn-add-doctor">+ Adicionar Médico</button>
+</div>
+<div id="alert-container"></div>
+
+<div class="table-responsive">
+  <table class="table table-striped table-hover">
+    <thead class="table-dark">
+      <tr>
+        <th>CRM</th>
+        <th>Nome</th>
+        <th>Especialidade</th>
+        <th id="actions-header">Ações</th>
+      </tr>
+    </thead>
+    <tbody id="doctors-tbody">
+      <tr><td colspan="4" class="text-center text-muted">Carregando…</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Modal de cadastro de médico -->
+<div class="modal fade" id="addDoctorModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Adicionar Médico</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div id="modal-alert"></div>
+        <form id="add-doctor-form">
+          <div class="mb-3">
+            <label class="form-label">Nome</label>
+            <input type="text" class="form-control" id="d-name" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Especialidade</label>
+            <input type="text" class="form-control" id="d-specialty" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">CRM</label>
+            <input type="text" class="form-control" id="d-crm" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button class="btn btn-primary" id="btn-save-doctor">Salvar</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="module" src="{{ url_for('webui.static', filename='js/doctors.js') }}"></script>
+{% endblock %}

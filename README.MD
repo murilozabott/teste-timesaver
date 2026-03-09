@@ -37,6 +37,28 @@ docker compose --profile test run --rm test
 - O banco de testes é migrado automaticamente antes de rodar o pytest
 - Saída detalhada com `pytest -vv --tb=long`
 
+## Frontend Web
+
+A aplicação inclui uma interface web acessível em <http://localhost:5000/>.
+
+### Páginas
+
+| Rota | Descrição | Acesso |
+|------|-----------|--------|
+| `/login` | Login e cadastro de usuários | Público |
+| `/appointments` | Lista e gerenciamento de agendamentos | Autenticado |
+| `/doctors` | Lista e gerenciamento de médicos | Admin |
+| `/patients` | Lista e gerenciamento de pacientes | Admin |
+
+### Autenticação no Frontend
+
+- O token JWT é armazenado no `localStorage` após o login
+- A navbar exibe links e nome do usuário conforme o papel (role)
+- Links de administração (`/doctors`, `/patients`) ficam ocultos para usuários `employee`
+- Sessões expiradas redirecionam automaticamente para `/login`
+
+---
+
 ## Modelos
 
 ### Doctor (Médico)
