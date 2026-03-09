@@ -1,8 +1,10 @@
 from flask import request
 from flask_restful import Resource
 
+from app.blueprints.api.auth import require_role
 from app.blueprints.api.schemas import AppointmentCreate, AppointmentUpdate
 from app.models import Appointment
+from app.models.user import UserRole
 from app.services import AppointmentService
 
 
@@ -18,10 +20,12 @@ def serialize_appointment(appointment: Appointment) -> dict:
 
 
 class AppointmentList(Resource):
+    @require_role(UserRole.EMPLOYEE)
     def get(self):
         appointments = AppointmentService.list_appointments()
         return [serialize_appointment(a) for a in appointments]
 
+    @require_role(UserRole.EMPLOYEE)
     def post(self):
         data = AppointmentCreate.model_validate(request.get_json())
 
@@ -36,10 +40,12 @@ class AppointmentList(Resource):
 
 
 class AppointmentDetail(Resource):
+    @require_role(UserRole.EMPLOYEE)
     def get(self, id):
         appointment = AppointmentService.get_appointment(id)
         return serialize_appointment(appointment)
 
+    @require_role(UserRole.EMPLOYEE)
     def put(self, id):
         data = AppointmentUpdate.model_validate(request.get_json())
 
@@ -54,6 +60,7 @@ class AppointmentDetail(Resource):
 
         return serialize_appointment(appointment)
 
+    @require_role(UserRole.EMPLOYEE)
     def delete(self, id):
         AppointmentService.delete_appointment(id)
         return "", 204

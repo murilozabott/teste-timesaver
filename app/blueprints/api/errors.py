@@ -4,6 +4,7 @@ from sqlalchemy.exc import IntegrityError
 from werkzeug.exceptions import BadRequest
 
 from app.exceptions import DoubleBookingError, EntityNotFoundError
+from app.services.auth_service import InvalidCredentialsError, TokenError
 
 
 def register_error_handlers(app):
@@ -36,6 +37,14 @@ def register_error_handlers(app):
     @app.errorhandler(EntityNotFoundError)
     def handle_entity_not_found_error(error):
         return jsonify({"message": error.message}), 404
+
+    @app.errorhandler(InvalidCredentialsError)
+    def handle_invalid_credentials_error(error):
+        return jsonify({"message": error.message}), 401
+
+    @app.errorhandler(TokenError)
+    def handle_token_error(error):
+        return jsonify({"message": error.message}), 401
 
     @app.errorhandler(Exception)
     def handle_unexpected_error(error):

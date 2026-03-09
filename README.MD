@@ -138,6 +138,63 @@ Base URL: `/api/v1`
 - Um paciente não pode ter duas consultas no mesmo horário
 - Consultas canceladas não são consideradas para validação de conflito
 
+### Auth
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| POST | `/auth/register` | Registra novo usuário |
+| POST | `/auth/login` | Realiza login e retorna token JWT |
+
+**POST /auth/register** - Body:
+```json
+{
+  "username": "joao_silva",
+  "password": "senha_segura_123",
+  "role": "employee"
+}
+```
+
+**Resposta** (201 Created):
+```json
+{
+  "id": 1,
+  "username": "joao_silva",
+  "role": "employee"
+}
+```
+
+**POST /auth/login** - Body:
+```json
+{
+  "username": "joao_silva",
+  "password": "senha_segura_123"
+}
+```
+
+**Resposta** (200 OK):
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
+**Autenticação:**
+- Utilize o token retornado no header `Authorization` com o prefixo `Bearer `:
+```bash
+curl -H "Authorization: Bearer {access_token}" http://localhost:5000/api/v1/doctors
+```
+
+**Controle de Acesso por Função (Role):**
+
+Alguns endpoints exigem funções específicas (definidas pelo decorator `@require_role`):
+
+| Role | Nível | Descrição |
+|------|-------|-----------|
+| `employee` | 1 | Usuário padrão com acesso básico |
+| `admin` | 2 | Administrador com acesso total |
+
+Ao tentar acessar um endpoint que requer role superior à do usuário, a API retorna `403 Forbidden`.
+
 ### Erros
 
 | Código | Descrição |

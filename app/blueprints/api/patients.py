@@ -1,12 +1,15 @@
 from flask import request
 from flask_restful import Resource
 
+from app.blueprints.api.auth import require_role
 from app.blueprints.api.schemas import PatientCreate
 from app.ext.database import db
 from app.models import Patient
+from app.models.user import UserRole
 
 
 class PatientList(Resource):
+    @require_role(UserRole.ADMIN)
     def get(self):
         patients = Patient.query.all()
         return [
@@ -19,6 +22,7 @@ class PatientList(Resource):
             for p in patients
         ]
 
+    @require_role(UserRole.ADMIN)
     def post(self):
         data = PatientCreate.model_validate(request.get_json())
         patient = Patient(
@@ -37,6 +41,7 @@ class PatientList(Resource):
 
 
 class PatientDetail(Resource):
+    @require_role(UserRole.ADMIN)
     def get(self, id):
         patient = db.session.get(Patient, id)
         if not patient:
@@ -48,6 +53,7 @@ class PatientDetail(Resource):
             "birth_date": patient.birth_date.isoformat(),
         }
 
+    @require_role(UserRole.ADMIN)
     def delete(self, id):
         patient = db.session.get(Patient, id)
         if not patient:

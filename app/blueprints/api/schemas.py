@@ -35,6 +35,25 @@ class AppointmentCreate(BaseModel):
     notes: str | None = None
 
 
+class UserRegister(BaseModel):
+    """
+    Schema para validar payload da requisição de registro de usuário
+    """
+
+    username: str
+    password: str
+    role: Literal["employee", "admin"] = "employee"
+
+
+class UserLogin(BaseModel):
+    """
+    Schema para validar payload da requisição de login
+    """
+
+    username: str
+    password: str
+
+
 class AppointmentUpdate(BaseModel):
     """
     Schema para validar payload da requisição de atualização de consulta

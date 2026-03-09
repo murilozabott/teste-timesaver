@@ -17,6 +17,7 @@ def create_app():
         from sqlalchemy import text
 
         from app.ext.database import db
+        from app.models.user import User, UserRole
 
         try:
             db.session.execute(text("SELECT 1"))

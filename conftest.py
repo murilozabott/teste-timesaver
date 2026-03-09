@@ -1,8 +1,11 @@
 import pytest
 from sqlalchemy.orm import scoped_session, sessionmaker
+from werkzeug.security import generate_password_hash
 
 from app import create_app
 from app.ext.database import db as _db
+from app.models.user import User, UserRole
+from app.services.auth_service import AuthService
 
 
 @pytest.fixture(scope="session")
@@ -48,3 +51,33 @@ def db_session(app):
 @pytest.fixture
 def client(app, db_session):
     return app.test_client()
+
+
+def _create_user_and_token(app, role: UserRole) -> str:
+    """Cria usuário no banco e retorna JWT token."""
+    username = f"test_{role.value}_{id(role)}"
+    user = User(
+        username=username,
+        password_hash=generate_password_hash("testpass"),
+        role=role,
+    )
+    _db.session.add(user)
+    _db.session.flush()
+
+    with app.app_context():
+        token = AuthService.login(username, "testpass")
+    return token
+
+
+@pytest.fixture
+def admin_headers(app, db_session):
+    """Headers com token JWT de admin."""
+    token = _create_user_and_token(app, UserRole.ADMIN)
+    return {"Authorization": f"Bearer {token}"}
+
+
+@pytest.fixture
+def employee_headers(app, db_session):
+    """Headers com token JWT de employee."""
+    token = _create_user_and_token(app, UserRole.EMPLOYEE)
+    return {"Authorization": f"Bearer {token}"}

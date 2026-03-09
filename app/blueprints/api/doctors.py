@@ -1,13 +1,16 @@
 from flask import request
 from flask_restful import Resource
 
+from app.blueprints.api.auth import require_role
 from app.blueprints.api.schemas import DoctorCreate
 from app.ext.database import db
 from app.models import Doctor
+from app.models.user import UserRole
 
 
 class DoctorList(Resource):
     def get(self):
+        """Público - qualquer um pode listar médicos"""
         doctors = Doctor.query.all()
         return [
             {
@@ -19,6 +22,7 @@ class DoctorList(Resource):
             for d in doctors
         ]
 
+    @require_role(UserRole.ADMIN)
     def post(self):
         data = DoctorCreate.model_validate(request.get_json())
         doctor = Doctor(
@@ -38,6 +42,7 @@ class DoctorList(Resource):
 
 class DoctorDetail(Resource):
     def get(self, crm):
+        """Público - qualquer um pode ver detalhes de médico"""
         doctor = db.session.query(Doctor).filter_by(crm=crm).first()
         if not doctor:
             return {"message": "Doctor not found"}, 404
@@ -48,6 +53,7 @@ class DoctorDetail(Resource):
             "crm": doctor.crm,
         }
 
+    @require_role(UserRole.ADMIN)
     def delete(self, crm):
         doctor = db.session.query(Doctor).filter_by(crm=crm).first()
         if not doctor:
